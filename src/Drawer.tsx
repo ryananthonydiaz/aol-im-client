@@ -14,7 +14,7 @@ interface IDrawerProps {
 
 function Drawer({ isOpen, setDrawerIsOpenToFalse }: IDrawerProps) {
   const drawerRef = useRef(null);
-  const [selectedTab, setSelectedTab] = useState<number>(1);
+  // const [selectedTab, setSelectedTab] = useState<number>(1);
   const [drawerStyles, setDrawerStyles] = useState<string>(styles.container);
 
   useEffect(() => {
@@ -55,16 +55,14 @@ function Drawer({ isOpen, setDrawerIsOpenToFalse }: IDrawerProps) {
           <menu role="tablist">
             <button
               style={{ background: "rgb(214,214,206)", fontSize: "1rem" }}
-              aria-selected={selectedTab === 1}
-              onClick={() => setSelectedTab(1)}
+              // onClick={() => setSelectedTab(1)}
               aria-controls="music"
             >
               Online
             </button>
             <button
               style={{ background: "rgb(214,214,206)", fontSize: "1rem" }}
-              aria-selected={selectedTab === 2}
-              onClick={() => setSelectedTab(2)}
+              // onClick={() => setSelectedTab(2)}
               aria-controls="dogs"
             >
               List Setup
