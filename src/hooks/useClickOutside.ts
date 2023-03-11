@@ -10,15 +10,15 @@ export function useClickOutside(
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const eventTarget = e.target as HTMLElement;
-      if (elRef?.current?.contains(eventTarget) && callbackRef.current) {
+      if (!elRef?.current?.contains(eventTarget) && callbackRef.current) {
         callbackRef.current();
       }
+    };
 
-      document.addEventListener("click", handleClickOutside, true);
+    document.addEventListener("click", handleClickOutside, true);
 
-      return function useClickOutsideEffectCleanUp() {
-        document.removeEventListener("click", handleClickOutside, true);
-      };
+    return function useClickOutsideEffectCleanUp() {
+      document.removeEventListener("click", handleClickOutside, true);
     };
   }, [callbackRef, elRef]);
 }

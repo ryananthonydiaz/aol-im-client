@@ -1,0 +1,23 @@
+.button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  margin: 0;
+}
+
+.button:not(:disabled):hover {
+  box-shadow: none;
+}
+
+.button:not(:disabled):active {
+  background: none;
+}
+
+.button:focus {
+  box-shadow: none;
+  outline: none;
+}
