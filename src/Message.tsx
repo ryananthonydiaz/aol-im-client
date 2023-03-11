@@ -15,16 +15,17 @@ interface IMessage {
 
 function Message({ userName, message, direction, isFirstChild }: IMessage) {
   return (
-    <div className="title-bar-text" style={{ display: "flex", marginTop: isFirstChild ? 'auto' : ''}}>
-      <div
+    <div
+      style={{ display: "flex", fontFamily: 'Georgia', fontSize: '1rem', marginTop: isFirstChild ? "auto" : "" }}
+    >
+      <span
         style={{
           color: direction === Direction.OUT_BOUND ? "blue" : "red",
           fontWeight: 700,
         }}
       >
-        {userName}:{" "}
-      </div>
-      <div style={{ color: "black", fontWeight: "300" }}>{message}</div>
+        {userName}: <span style={{ color: "black", fontWeight: "300" }}>{message}</span>
+      </span>
     </div>
   );
 }

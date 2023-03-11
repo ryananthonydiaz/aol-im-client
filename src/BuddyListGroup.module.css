@@ -7,6 +7,7 @@
   cursor: pointer;
   outline: inherit;
   margin: 0;
+  text-align: left;
 }
 
 .button:not(:disabled):hover {

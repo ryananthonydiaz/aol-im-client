@@ -1,3 +1,30 @@
 .textarea {
   resize: none;
 }
+
+/* Uncomment the commented out code  */
+
+.window {
+  /* width: 400px;
+  cursor: move;
+  height: 300px; */
+  background: rgb(214,214,206);
+  transition: all .5s ease-out;
+
+  /* Remove below css when you uncomment the other css and implement draggable window */
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+
+/* .fullScreenContainer {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 1;
+} */

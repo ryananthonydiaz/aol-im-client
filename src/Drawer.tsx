@@ -14,7 +14,6 @@ interface IDrawerProps {
 
 function Drawer({ isOpen, setDrawerIsOpenToFalse }: IDrawerProps) {
   const drawerRef = useRef(null);
-  // const [selectedTab, setSelectedTab] = useState<number>(1);
   const [drawerStyles, setDrawerStyles] = useState<string>(styles.container);
 
   useEffect(() => {

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, MouseEvent } from "react";
+import { useChatWindowDispatch, ChatWindowActionType } from './hooks/createChatWindowStore'
 import IconArrowRight from "./icons/IconArrowRight";
 import IconArrowDropDown from "./icons/IconArrowDropDown";
 import styles from "./BuddyListGroup.module.css";
@@ -12,6 +13,19 @@ interface IBuddyListGroupProps {
 
 function BuddyListGroup({ buddies, groupName }: IBuddyListGroupProps) {
   const [buddiesAreShowing, setBuddiesAreShowing] = useState<boolean>(false);
+  const chatWindowDispatch = useChatWindowDispatch()
+
+  function createNewChat(e: MouseEvent<HTMLButtonElement>, buddy: string) {
+    e.stopPropagation();
+    chatWindowDispatch({
+      type: ChatWindowActionType.CREATE_NEW_CHAT_WINDOW,
+      payload: {
+        windowIsOpen: true,
+        recipient: buddy,
+        chatRoomId: Math.floor(Math.random() * 100)
+      }
+    })
+  }
 
   return (
     <li>
@@ -42,7 +56,9 @@ function BuddyListGroup({ buddies, groupName }: IBuddyListGroupProps) {
             }}
           >
             {buddies.map((buddy) => (
-              <li>{buddy}</li>
+              <li>
+                <button className={styles.button} onClick={(e) => createNewChat(e, buddy)}>{buddy}</button>
+              </li>
             ))}
           </ul>
         ) : null}

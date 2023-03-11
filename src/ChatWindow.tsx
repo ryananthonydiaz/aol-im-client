@@ -1,23 +1,18 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, KeyboardEvent } from "react";
 import Message, { Direction } from "./Message";
+import { useChatWindowState, useChatWindowDispatch, ChatWindowActionType } from './hooks/createChatWindowStore'
 import aolSendIcon from "./assets/images/aolSendIcon.png";
 import styles from "./ChatWindow.module.css";
 
-const initialMessageMockData = [
-  {
-    direction: Direction.IN_BOUND,
-    userName: "ryvn.divz09128",
-    message: "What up, what's going on?",
-  },
-  {
-    direction: Direction.OUT_BOUND,
-    userName: "little.pixie.2393",
-    message: "Nothing Much - you?",
-  },
-];
-
 function ChatWindow() {
   const chatWindowRef = useRef<HTMLDivElement>(null);
+  const [chatWindowStyles, setChatWindowStyles] = useState<string>(`window ${styles.window} ${styles.fullScreenContainer}`);
+  const {
+    recipient,
+    chatRoomId,
+    windowIsOpen,
+  } = useChatWindowState();
+  const chatWindowDispatch = useChatWindowDispatch();
   const [messageWasSent, setMessageWasSent] = useState<boolean>(false);
   const [messages, setMessages] = useState<
     Array<{
@@ -25,19 +20,28 @@ function ChatWindow() {
       userName: string;
       message: string;
     }>
-  >(initialMessageMockData);
+  >([]);
   const [newMessage, setNewMessage] = useState<string>("");
 
   useEffect(() => {
     if (messageWasSent) {
       const chatWindowScrollHeight = chatWindowRef?.current?.scrollHeight;
-      console.log({chatWindowScrollHeight});
-
       chatWindowRef?.current?.scrollTo(0, chatWindowScrollHeight ?? 0);
 
       setMessageWasSent(false);
     }
   }, [messageWasSent]);
+
+  useEffect(() => {
+    if (windowIsOpen === false) {
+      setChatWindowStyles(`window ${styles.window}`);
+      setMessages([]);
+    }
+    return function cleanUpState() {
+      setChatWindowStyles(`window ${styles.window}`);
+      setMessages([]);
+    }
+  }, [windowIsOpen]);
 
   function handleSendMessage() {
     setMessageWasSent(true);
@@ -49,27 +53,55 @@ function ChatWindow() {
           userName: "ryvn.divz",
           message: newMessage,
         },
+        // TODO: Below additional message eventually needs to go because it's just for mocking.
+        {
+          direction: Direction.IN_BOUND,
+          userName: recipient ?? '',
+          message: newMessage,
+        },
       ];
     });
 
-    setNewMessage('');
+    setNewMessage("");
   }
+
+  function closeChatWindow() {
+    chatWindowDispatch({
+      type: ChatWindowActionType.CLOSE_WINDOW_CHAT, 
+      payload: undefined,
+    })
+  }
+
+  function maximizeChatWindow() {
+    setChatWindowStyles(`
+    window ${styles.transition} ${styles.fullScreenContainer}
+    `)
+  }
+
+  function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    const keyCode = e.keyCode;
+    if (keyCode === 13) {
+      handleSendMessage()
+    }
+  }
+
+  if (windowIsOpen === false) {
+    return null;
+  }
+
+
   return (
     <div
-      className="window"
-      style={{
-        width: "400px",
-        cursor: "move",
-        height: "300px",
-        background: "rgb(214,214,206)",
-      }}
+      draggable
+      className={chatWindowStyles}
+      onKeyDown={handleKeyDown}
     >
       <div className="title-bar" style={{ flexBasis: 0 }}>
-        <div className="title-bar-text">Instance Message</div>
+        <div className="title-bar-text">Instance Message with {recipient}</div>
         <div className="title-bar-controls">
-          <button aria-label="Minimize"></button>
-          <button aria-label="Maximize"></button>
-          <button aria-label="Close"></button>
+          <button aria-label="Minimize" onClick={closeChatWindow}></button>
+          <button aria-label="Maximize" onClick={maximizeChatWindow}></button>
+          <button aria-label="Close" onClick={closeChatWindow}></button>
         </div>
       </div>
       <div
@@ -115,8 +147,18 @@ function ChatWindow() {
                 gap: ".25rem 0",
               }}
             >
-              <div style={{ overflowY: 'scroll', height: '100%' }} ref={chatWindowRef}>
-                <div style={{ display: 'flex', flexFlow: 'column', height: '100%'}}>
+              <div
+                style={{ overflowY: "scroll", height: "100%" }}
+                ref={chatWindowRef}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexFlow: "column",
+                    height: "100%",
+                    gap: '1rem 0'
+                  }}
+                >
                   {messages.map((msg, index) => (
                     <Message
                       key={index}
