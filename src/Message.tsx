@@ -16,7 +16,12 @@ interface IMessage {
 function Message({ userName, message, direction, isFirstChild }: IMessage) {
   return (
     <div
-      style={{ display: "flex", fontFamily: 'Georgia', fontSize: '1rem', marginTop: isFirstChild ? "auto" : "" }}
+      style={{
+        display: "flex",
+        fontFamily: "Georgia",
+        fontSize: "1rem",
+        marginTop: isFirstChild ? "auto" : "",
+      }}
     >
       <span
         style={{
@@ -24,7 +29,8 @@ function Message({ userName, message, direction, isFirstChild }: IMessage) {
           fontWeight: 700,
         }}
       >
-        {userName}: <span style={{ color: "black", fontWeight: "300" }}>{message}</span>
+        {userName}:{" "}
+        <span style={{ color: "black", fontWeight: "300" }}>{message}</span>
       </span>
     </div>
   );

@@ -1,5 +1,6 @@
 .textarea {
   resize: none;
+  font-size: 1rem;
 }
 
 /* Uncomment the commented out code  */
@@ -8,8 +9,8 @@
   /* width: 400px;
   cursor: move;
   height: 300px; */
-  background: rgb(214,214,206);
-  transition: all .5s ease-out;
+  background: rgb(214, 214, 206);
+  transition: all 0.5s ease-out;
 
   /* Remove below css when you uncomment the other css and implement draggable window */
   position: fixed;
@@ -18,6 +19,13 @@
   left: 0;
   top: 0;
   z-index: 1;
+}
+
+.smallWindow {
+  width: 400px;
+  cursor: move;
+  height: 300px;
+  background: rgb(214, 214, 206);
 }
 
 /* .fullScreenContainer {

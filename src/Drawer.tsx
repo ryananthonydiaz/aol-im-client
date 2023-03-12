@@ -7,6 +7,11 @@ import styles from "./drawer.module.css";
 // https://github.com/botoxparty/XP.css
 import "xp.css/dist/XP.css";
 
+const drawerStylesConstants = {
+  MAXIMIZED: `${styles.container} ${styles.maximize}`,
+  NON_MAXIMIZED: `${styles.container} ${styles.slide}`
+}
+
 interface IDrawerProps {
   isOpen: boolean;
   setDrawerIsOpenToFalse: () => void;
@@ -18,14 +23,18 @@ function Drawer({ isOpen, setDrawerIsOpenToFalse }: IDrawerProps) {
 
   useEffect(() => {
     if (isOpen) {
-      setDrawerStyles(`${styles.container} ${styles.slide}`);
+      setDrawerStyles(drawerStylesConstants.NON_MAXIMIZED);
     }
   }, [isOpen]);
 
   useClickOutside(drawerRef, closeDrawer);
 
   function maximizeDrawer() {
-    setDrawerStyles(`${styles.container} ${styles.maximize}`);
+    if (drawerStyles !== drawerStylesConstants.MAXIMIZED) {
+      setDrawerStyles(drawerStylesConstants.MAXIMIZED);
+    } else {
+      setDrawerStyles(drawerStylesConstants.NON_MAXIMIZED);
+    }
   }
 
   function closeDrawer() {
@@ -102,24 +111,32 @@ function Drawer({ isOpen, setDrawerIsOpenToFalse }: IDrawerProps) {
                     gap: ".5rem 0",
                   }}
                 >
-                  <BuddyListGroup
-                    groupName="Buddies (4/14)"
-                    buddies={[
-                      "PixieGal999",
-                      "CatLoverrr04",
-                      "DancingGirl229",
-                      "PrincessJ9966532",
-                    ]}
-                  />
-
-                  <BuddyListGroup
-                    groupName="Co-workers (3/7)"
-                    buddies={[
-                      "RollTheDice9285",
-                      "FairyQueen2286532",
-                      "DanTheMan29012",
-                    ]}
-                  />
+                  {[
+                    {
+                      groupName: "Buddies (4/14)",
+                      buddies: [
+                        "PixieGal999",
+                        "CatLoverrr04",
+                        "DancingGirl229",
+                        "PrincessJ9966532",
+                      ],
+                    },
+                    {
+                      groupName: "Co-workers (3/7)",
+                      buddies: [
+                        "RollTheDice9285",
+                        "FairyQueen2286532",
+                        "DanTheMan29012",
+                      ],
+                    },
+                  ].map((buddyListGroup, key) => (
+                    <BuddyListGroup
+                      key={key}
+                      groupName={buddyListGroup.groupName}
+                      closeDrawer={closeDrawer}
+                      buddies={buddyListGroup.buddies}
+                    />
+                  ))}
                 </ul>
               </div>
             </div>

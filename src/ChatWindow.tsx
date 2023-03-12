@@ -1,17 +1,19 @@
 import React, { useState, useRef, useEffect, KeyboardEvent } from "react";
 import Message, { Direction } from "./Message";
-import { useChatWindowState, useChatWindowDispatch, ChatWindowActionType } from './hooks/createChatWindowStore'
+import {
+  useChatWindowState,
+  useChatWindowDispatch,
+  ChatWindowActionType,
+} from "./hooks/createChatWindowStore";
 import aolSendIcon from "./assets/images/aolSendIcon.png";
 import styles from "./ChatWindow.module.css";
 
 function ChatWindow() {
   const chatWindowRef = useRef<HTMLDivElement>(null);
-  const [chatWindowStyles, setChatWindowStyles] = useState<string>(`window ${styles.window} ${styles.fullScreenContainer}`);
-  const {
-    recipient,
-    chatRoomId,
-    windowIsOpen,
-  } = useChatWindowState();
+  const [chatWindowStyles, setChatWindowStyles] = useState<string>(
+    `window ${styles.window} ${styles.fullScreenContainer}`
+  );
+  const { recipient, chatRoomId, windowIsOpen } = useChatWindowState();
   const chatWindowDispatch = useChatWindowDispatch();
   const [messageWasSent, setMessageWasSent] = useState<boolean>(false);
   const [messages, setMessages] = useState<
@@ -40,7 +42,7 @@ function ChatWindow() {
     return function cleanUpState() {
       setChatWindowStyles(`window ${styles.window}`);
       setMessages([]);
-    }
+    };
   }, [windowIsOpen]);
 
   function handleSendMessage() {
@@ -56,7 +58,7 @@ function ChatWindow() {
         // TODO: Below additional message eventually needs to go because it's just for mocking.
         {
           direction: Direction.IN_BOUND,
-          userName: recipient ?? '',
+          userName: recipient ?? "",
           message: newMessage,
         },
       ];
@@ -67,21 +69,23 @@ function ChatWindow() {
 
   function closeChatWindow() {
     chatWindowDispatch({
-      type: ChatWindowActionType.CLOSE_WINDOW_CHAT, 
+      type: ChatWindowActionType.CLOSE_WINDOW_CHAT,
       payload: undefined,
-    })
+    });
   }
 
   function maximizeChatWindow() {
-    setChatWindowStyles(`
-    window ${styles.transition} ${styles.fullScreenContainer}
-    `)
+    if (chatWindowStyles !== `window ${styles.window}`) {
+      setChatWindowStyles(`window ${styles.window}`);
+    } else {
+      setChatWindowStyles(`window ${styles.smallWindow}`);
+    }
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
     const keyCode = e.keyCode;
     if (keyCode === 13) {
-      handleSendMessage()
+      handleSendMessage();
     }
   }
 
@@ -89,13 +93,8 @@ function ChatWindow() {
     return null;
   }
 
-
   return (
-    <div
-      draggable
-      className={chatWindowStyles}
-      onKeyDown={handleKeyDown}
-    >
+    <div draggable className={chatWindowStyles} onKeyDown={handleKeyDown}>
       <div className="title-bar" style={{ flexBasis: 0 }}>
         <div className="title-bar-text">Instance Message with {recipient}</div>
         <div className="title-bar-controls">
@@ -156,7 +155,7 @@ function ChatWindow() {
                     display: "flex",
                     flexFlow: "column",
                     height: "100%",
-                    gap: '1rem 0'
+                    gap: "1rem 0",
                   }}
                 >
                   {messages.map((msg, index) => (
