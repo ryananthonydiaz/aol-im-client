@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import BuddyListGroup from "./BuddyListGroup";
 import { useClickOutside } from "./hooks/useClickOutside";
+import {useWebSocketContext} from './hooks/createWebSocketStore';
+import { useUserState } from "./hooks/createUserStore";
 import styles from "./drawer.module.css";
 
 // https://botoxparty.github.io/XP.css/
@@ -18,6 +20,10 @@ interface IDrawerProps {
 }
 
 function Drawer({ isOpen, setDrawerIsOpenToFalse }: IDrawerProps) {
+  const { userName } = useUserState();
+  const {lastJsonMessage} = useWebSocketContext();
+  const [usersOnline, setUsersOnline] = useState<Array<string>>([]);
+  const [usersOffline, setUsersOffline] = useState<Array<string>>([]);
   const drawerRef = useRef(null);
   const [drawerStyles, setDrawerStyles] = useState<string>(styles.container);
 
@@ -26,6 +32,14 @@ function Drawer({ isOpen, setDrawerIsOpenToFalse }: IDrawerProps) {
       setDrawerStyles(drawerStylesConstants.NON_MAXIMIZED);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    //@ts-ignore
+    if (lastJsonMessage?.onlineUsers) {
+        //@ts-ignore
+        setUsersOnline(lastJsonMessage?.onlineUsers);
+    }
+  }, [lastJsonMessage]);
 
   useClickOutside(drawerRef, closeDrawer);
 
@@ -113,21 +127,12 @@ function Drawer({ isOpen, setDrawerIsOpenToFalse }: IDrawerProps) {
                 >
                   {[
                     {
-                      groupName: "Buddies (4/14)",
-                      buddies: [
-                        "PixieGal999",
-                        "CatLoverrr04",
-                        "DancingGirl229",
-                        "PrincessJ9966532",
-                      ],
+                      groupName: "Buddies",
+                      buddies: usersOnline.filter(user => user !== userName),
                     },
                     {
-                      groupName: "Co-workers (3/7)",
-                      buddies: [
-                        "RollTheDice9285",
-                        "FairyQueen2286532",
-                        "DanTheMan29012",
-                      ],
+                      groupName: "offline",
+                      buddies: usersOffline,
                     },
                   ].map((buddyListGroup, key) => (
                     <BuddyListGroup

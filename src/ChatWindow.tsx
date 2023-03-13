@@ -7,12 +7,12 @@ import {
 } from "./hooks/createChatWindowStore";
 import aolSendIcon from "./assets/images/aolSendIcon.png";
 import { useWebSocketContext } from "./hooks/createWebSocketStore";
-import {useUserState} from './hooks/createUserStore'
+import { useUserState } from "./hooks/createUserStore";
 import styles from "./ChatWindow.module.css";
 
 function ChatWindow() {
-  const {userName} = useUserState();
-  const {sendMessage, lastJsonMessage} = useWebSocketContext();
+  const { userName } = useUserState();
+  const { sendMessage, lastJsonMessage } = useWebSocketContext();
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const [chatWindowStyles, setChatWindowStyles] = useState<string>(
     `window ${styles.window} ${styles.fullScreenContainer}`

@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from "react";
 import useWebSocket, { SendMessage } from "react-use-websocket";
+import {useUserState} from './createUserStore'
 import { JsonValue } from "react-use-websocket/dist/lib/types";
 
 const WEB_SOCKET_SERVER_URL = "ws://localhost:3000";
@@ -14,23 +15,30 @@ function createWebSocketStore() {
   });
 
   const WebSocketProvider: React.FC<{ children: any }> = ({ children }) => {
-    const { sendMessage, lastJsonMessage } = useWebSocket(WEB_SOCKET_SERVER_URL, {
-      onOpen: () => {
-        console.log("WebSocket connection established.");
-        // sendMessage({
-  
-        // })
-      },
-      //Will attempt to reconnect on all close events, such as server shutting down
-      shouldReconnect: () => true,
-      onClose: () => console.log("web socket closed :("),
-      onError: (error) => console.error(error),
-    });
+    const {userName} = useUserState();
+    const { sendMessage, lastJsonMessage } = useWebSocket(
+      WEB_SOCKET_SERVER_URL,
+      {
+        onOpen: () => {
+          console.log("WebSocket connection established.");
+          sendMessage(JSON.stringify({
+            type: 'SET_USER_AS_ONLINE',
+            userName,
+          }))
+        },
+        //Will attempt to reconnect on all close events, such as server shutting down
+        shouldReconnect: () => true,
+        onClose: () => console.log("web socket closed :("),
+        onError: (error) => console.error(error),
+      }
+    );
     return (
-      <StateContext.Provider value={{
-        sendMessage,
-        lastJsonMessage,
-      }}>
+      <StateContext.Provider
+        value={{
+          sendMessage,
+          lastJsonMessage,
+        }}
+      >
         {children}
       </StateContext.Provider>
     );

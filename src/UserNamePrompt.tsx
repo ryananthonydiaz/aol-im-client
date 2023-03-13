@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   useUserDispatch,
   useUserState,
@@ -7,12 +7,12 @@ import {
 import { Navigate } from "react-router-dom";
 
 function UserNamePrompt() {
-  const [localUserName, setLocalUserName] = useState<string>('')
+  const [localUserName, setLocalUserName] = useState<string>("");
   const userDispatch = useUserDispatch();
-  const {userName} = useUserState();
+  const { userName } = useUserState();
 
   if (userName) {
-    return <Navigate to="/home" replace={true} />
+    return <Navigate to="/home" replace={true} />;
   }
 
   return (
@@ -38,9 +38,7 @@ function UserNamePrompt() {
           type="text"
           style={{ fontSize: "1rem" }}
           value={localUserName}
-          onChange={(e) =>
-            setLocalUserName(e.target.value)
-          }
+          onChange={(e) => setLocalUserName(e.target.value)}
         />
         <button
           onClick={() => {
