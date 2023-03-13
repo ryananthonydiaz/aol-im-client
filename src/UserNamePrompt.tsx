@@ -1,16 +1,20 @@
-import React, { Dispatch } from "react";
+import React, {useState} from "react";
+import {
+  useUserDispatch,
+  useUserState,
+  UserActionType,
+} from "./hooks/createUserStore";
+import { Navigate } from "react-router-dom";
 
-interface IUserNamePromptProps {
-  setPromptIsOpen: Dispatch<React.SetStateAction<boolean>>;
-  setPromptedUserName: Dispatch<React.SetStateAction<string>>;
-  promptedUserName: string;
-}
+function UserNamePrompt() {
+  const [localUserName, setLocalUserName] = useState<string>('')
+  const userDispatch = useUserDispatch();
+  const {userName} = useUserState();
 
-function UserNamePrompt({
-  promptedUserName,
-  setPromptIsOpen,
-  setPromptedUserName,
-}: IUserNamePromptProps) {
+  if (userName) {
+    return <Navigate to="/home" replace={true} />
+  }
+
   return (
     <div
       className="window"
@@ -32,19 +36,27 @@ function UserNamePrompt({
         <input
           id="text22"
           type="text"
-          style={{fontSize: '1rem'}}
-          value={promptedUserName}
-          onChange={(e) => setPromptedUserName(e.target.value)}
+          style={{ fontSize: "1rem" }}
+          value={localUserName}
+          onChange={(e) =>
+            setLocalUserName(e.target.value)
+          }
         />
         <button
           onClick={() => {
-            if (promptedUserName.length > 3) {
-              setPromptIsOpen(false);
+            if ((localUserName?.length ?? "") > 3) {
+              userDispatch({
+                type: UserActionType.SET_USER_NAME,
+                payload: localUserName,
+              });
               return;
             }
 
             alert("You must set a username with at least 4 characters");
-            setPromptedUserName("");
+            userDispatch({
+              type: UserActionType.SET_USER_NAME,
+              payload: "",
+            });
           }}
         >
           Submit

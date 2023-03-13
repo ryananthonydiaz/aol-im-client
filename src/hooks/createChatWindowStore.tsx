@@ -23,10 +23,10 @@ const initialChatWindowState: IChatWindowState = {
   windowIsOpen: false,
 };
 
-const storyReducer: Reducer<Partial<IChatWindowState>, IChatWindowAction> = (
-  state: Partial<IChatWindowState>,
-  action: IChatWindowAction
-) => {
+const chatWindowReducer: Reducer<
+  Partial<IChatWindowState>,
+  IChatWindowAction
+> = (state: Partial<IChatWindowState>, action: IChatWindowAction) => {
   switch (action.type) {
     case ChatWindowActionType.CREATE_NEW_CHAT_WINDOW:
       // { recipient: <<userName>>, chatRoomId: <<chat-room-id-from-server>>, windowIsOpen: true }
@@ -54,7 +54,7 @@ const createChatWindowStore = () => {
     IChatWindowState,
     IChatWindowAction,
     Reducer<Partial<IChatWindowState>, IChatWindowAction>
-  >(initialChatWindowState, storyReducer);
+  >(initialChatWindowState, chatWindowReducer);
 
   return {
     ChatWindowProvider,

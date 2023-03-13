@@ -6,17 +6,13 @@ import {
   ChatWindowActionType,
 } from "./hooks/createChatWindowStore";
 import aolSendIcon from "./assets/images/aolSendIcon.png";
-import { SendMessage } from "react-use-websocket";
-import { JsonValue } from "react-use-websocket/dist/lib/types";
+import { useWebSocketContext } from "./hooks/createWebSocketStore";
+import {useUserState} from './hooks/createUserStore'
 import styles from "./ChatWindow.module.css";
 
-interface IChatWindowProps {
-  sendMessage: SendMessage;
-  lastJsonMessage: JsonValue | null;
-  promptedUserName: string
-}
-
-function ChatWindow({ sendMessage, lastJsonMessage, promptedUserName }: IChatWindowProps) {
+function ChatWindow() {
+  const {userName} = useUserState();
+  const {sendMessage, lastJsonMessage} = useWebSocketContext();
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const [chatWindowStyles, setChatWindowStyles] = useState<string>(
     `window ${styles.window} ${styles.fullScreenContainer}`
@@ -77,7 +73,7 @@ function ChatWindow({ sendMessage, lastJsonMessage, promptedUserName }: IChatWin
     sendMessage(
       JSON.stringify({
         direction: Direction.OUT_BOUND,
-        userName: promptedUserName,
+        userName: userName,
         message: newMessage,
       })
     );
