@@ -6,9 +6,17 @@ import {
   ChatWindowActionType,
 } from "./hooks/createChatWindowStore";
 import aolSendIcon from "./assets/images/aolSendIcon.png";
+import { SendMessage } from "react-use-websocket";
+import { JsonValue } from "react-use-websocket/dist/lib/types";
 import styles from "./ChatWindow.module.css";
 
-function ChatWindow() {
+interface IChatWindowProps {
+  sendMessage: SendMessage;
+  lastJsonMessage: JsonValue | null;
+  promptedUserName: string
+}
+
+function ChatWindow({ sendMessage, lastJsonMessage, promptedUserName }: IChatWindowProps) {
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const [chatWindowStyles, setChatWindowStyles] = useState<string>(
     `window ${styles.window} ${styles.fullScreenContainer}`
@@ -45,26 +53,34 @@ function ChatWindow() {
     };
   }, [windowIsOpen]);
 
+  useEffect(() => {
+    if (lastJsonMessage) {
+      //@ts-ignore
+      setMessages((prev) => {
+        return [
+          ...prev,
+          {
+            ...lastJsonMessage,
+            //@ts-ignore
+            direction: Direction[lastJsonMessage.direction],
+          },
+        ];
+      });
+    }
+  }, [lastJsonMessage]);
+
   function handleSendMessage() {
     setMessageWasSent(true);
-    setMessages((prev) => {
-      return [
-        ...prev,
-        {
-          direction: Direction.OUT_BOUND,
-          userName: "ryvn.divz",
-          message: newMessage,
-        },
-        // TODO: Below additional message eventually needs to go because it's just for mocking.
-        {
-          direction: Direction.IN_BOUND,
-          userName: recipient ?? "",
-          message: newMessage,
-        },
-      ];
-    });
 
     setNewMessage("");
+
+    sendMessage(
+      JSON.stringify({
+        direction: Direction.OUT_BOUND,
+        userName: promptedUserName,
+        message: newMessage,
+      })
+    );
   }
 
   function closeChatWindow() {

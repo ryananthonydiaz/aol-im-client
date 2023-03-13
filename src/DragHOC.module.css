@@ -1,0 +1,15 @@
+.draggleContainer {
+  position: relative;
+  opacity: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.draggable {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  border: 2px solid red;
+}

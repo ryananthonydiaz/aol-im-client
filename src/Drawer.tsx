@@ -9,8 +9,8 @@ import "xp.css/dist/XP.css";
 
 const drawerStylesConstants = {
   MAXIMIZED: `${styles.container} ${styles.maximize}`,
-  NON_MAXIMIZED: `${styles.container} ${styles.slide}`
-}
+  NON_MAXIMIZED: `${styles.container} ${styles.slide}`,
+};
 
 interface IDrawerProps {
   isOpen: boolean;

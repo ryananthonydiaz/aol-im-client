@@ -5,7 +5,7 @@ export enum Direction {
   IN_BOUND = "IN_BOUND",
 }
 
-interface IMessage {
+export interface IMessage {
   userName: string;
   message: string;
   direction: Direction;
